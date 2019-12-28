@@ -1,4 +1,16 @@
-const { kInN } = require('./utils/proba/k-in-n')
+const { PokeTrainer, VARIANTS } = require('./poker/trainer')
 
-console.log('5 parmis 52', kInN(5, 52))
-console.log('7 parmis 52', kInN(7, 52))
+const pokeTrainer = new PokeTrainer({
+  playerCount: 6,
+  variant: VARIANTS.NLHE,
+  startingStack: 3000,
+  getLevel: (handCount) => Math.floor(handCount / 100),
+  getSmallBlind: (level) => 20 + 10 * level,
+  getAnte: (level) => 5 + 3 * level
+})
+
+let state = pokeTrainer.reset()
+
+while (!state.done) {
+  state = pokeTrainer.step(state.actions[0])
+}
